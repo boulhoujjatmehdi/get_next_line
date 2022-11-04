@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 5
-#endif
+// #ifndef BUFFER_SIZE
+// # define BUFFER_SIZE 5
+// #endif
 
 char *get_next_line(int fd);
 

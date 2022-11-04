@@ -6,20 +6,27 @@
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 11:53:04 by eboulhou          #+#    #+#             */
-/*   Updated: 2022/11/03 17:44:31 by eboulhou         ###   ########.fr       */
+/*   Updated: 2022/11/04 20:31:42 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 4
+#endif
+
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int		size1;
 	int		size2;
 	char	*str;
-
-	if (!s1 || !s2)
-		return (0);
+	
+	if (!s1)
+	{
+		s1 = malloc(1);
+		*s1 = 0;
+	}
 	size1 = strlen(s1);
 	size2 = strlen(s2);
 	str = (char *)malloc(size1 + size2 + 1);
@@ -27,107 +34,197 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (0);
 	strlcpy(str, s1, size1 + 1);
 	strlcat(str + size1, s2, size2 + 1);
+	free(s1);
 	return (str);
 }
-
-char	*reading_func(int fd, char *temp)
+int found_back_n(char *str)
 {
-	char buff[BUFFER_SIZE+1];
-	char *ret;
 	int i;
-	int found;
-
-	found = 0;
-	i = BUFFER_SIZE;
-	printf("temp at the reading function : -%s-\n",temp);
-	while(!strchr(temp, '\n') && i == BUFFER_SIZE)
-	{
-		i = read(fd, buff, BUFFER_SIZE);
-		buff[i] = 0;
-		strncat(temp, buff, BUFFER_SIZE);
-		if(i < BUFFER_SIZE)
-		{
-			return temp;
-		}
-	}
+	
 	i = 0;
-	// puts(temp);
-	printf("the len of temp in reading function : %zu\n", strlen(temp));
-	ret = malloc(strlen(temp)+1);
-	while(temp[i] != '\n')
+	if(!str)
+		return 0;
+	while(str[i] && str[i] != 10)
+		i++;
+	if(str[i] == 10)
+		return 1;
+	return 0;
+}
+
+char ft_get_line(char *temp)
+{
+	char *line;
+	int i = 0;
+	while (temp[i] !)// this is where we start tomorrow
+}
+char *read_function(int fd)
+{
+	char *temp;
+	char buff[BUFFER_SIZE + 1];
+	int rd;
+
+	rd = 1;
+	while(rd && !found_back_n(temp))
 	{
-		ret[i] = temp[i];
-		ret[++i] = 0;
+		rd = read(fd, buff, BUFFER_SIZE);
+		if(rd == -1)
+			return NULL;
+		temp = ft_strjoin(temp, buff);
 	}
-	
-	
-	// puts(ret);
-	// exit(0);
-	return ret;
+	return temp;
 }
-
-
-char	*get_next_line(int fd)
+char *get_next_line(int fd)
 {
 	char static stat[BUFFER_SIZE + 1];
 	char *temp;
-	char *ret;
-	char buff[BUFFER_SIZE+1];
-	int i;
-	temp = ft_strjoin(temp, stat);
-	i = read(fd, buff, BUFFER_SIZE);
-	buff[i] = 0;
-	*temp = 0;
-	printf("temp in the first function is : -%s-\n" , temp);
-	if(i < 1)
-		return NULL;
-	temp = ft_strjoin(temp, buff);
-	printf("temp at begining is : -%s-\n" , temp);
-	ret = reading_func(fd, temp );
-	strcpy(stat, (temp + strlen(ret)+1));
-	
-	printf("ret at begining is : -%s-\n" , ret);
-	printf("stat at begining is : -%s-\n" , stat);
+	char *line;
 
-	
-	return ret;
+	temp = NULL;
+	temp = read_function(fd);
+	line = ft_get_line(temp);
+	puts(temp);
+	// temp = NULL;
+	return NULL;
 }
-char	*get_next_line1(int fd)
-{
-	char static stat[BUFFER_SIZE + 1];
-	char *temp;
-	char *ret;
-	char buff[BUFFER_SIZE+1];
-	int i;
-
-	temp = ft_strjoin(temp, stat);
-	i = read(fd, buff, BUFFER_SIZE);
-	buff[i] = 0;
-	printf("temp in the second function is : -%s-\n" , temp);
-	exit(0);
-	*temp = 0;
-	if(i < 1)
-		return NULL;
-	temp = ft_strjoin(temp, buff);
-	printf("temp at begining is : -%s-\n" , temp);
-	ret = reading_func(fd, temp );
-	// exit(0);
-	strcpy(stat, (temp + strlen(ret)+1));
-	
-	printf("ret at begining is : -%s-\n" , ret);
-	printf("stat at begining is : -%s-\n" , stat);
-
-	
-	return ret;
-}
-
-
 
 
 int main ()
 {
-	int fd = open("file.txt" , O_RDONLY);
+	int fd  = open ("file.txt" , O_RDONLY);
 	get_next_line(fd);
-	puts("00000000000000000000");
-	// get_next_line1(fd);
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// void get_static(char *stat, char *temp)
+// {
+// 	int i;
+// 	int j;
+	
+// 	i = 0;
+// 	j = 
+// 	stat[0] = 0;
+// 	while(temp[i] && temp[i] != '\n')
+// 	{
+// 		i++;
+// 	}
+// 	if (!temp[i])
+// 		return ;
+// 	if (temp[i] == '\n')
+// 		i++;
+// 	while(temp[i + j])
+// 	{
+// 		stat[j] = temp[i+j];
+// 		j++;
+// 	}
+// 	stat[j] = 0;
+// }
+
+// int		isendline(char *str)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	if (!str)
+// 		return (0);
+// 	while (str[i])
+// 	{
+// 		if (str[i++] == '\n')
+// 			return (1);
+// 	}
+// 	return (0);
+// }
+
+// char	*reading_func(int fd, char *temp)
+// {
+// 	char	buff[BUFFER_SIZE + 1];
+// 	int		j;
+// 	int		rd;
+
+// 	rd = 1;
+// 	while(!isendline(temp) && rd)
+// 	{
+// 		j = 0;
+// 		while (j < BUFFER_SIZE + 1)
+// 			buff[j++] = 0;
+// 		rd = read(fd, buff, BUFFER_SIZE);
+// 		if (rd == -1 || (rd == 0 && !temp))
+// 			return (NULL);
+// 		buff[rd] = 0;
+// 		temp = ft_strjoin(temp, buff);
+// 		if (!temp)
+// 			return (NULL);
+// 	}
+// 	return (temp);
+// }
+
+// char	*ft_get_line(char *line, char *temp)
+// {
+// 	int len;
+
+// 	len = 0;
+// 	while (temp[len] && temp[len] != '\n')
+// 		len++;
+// 	if (temp[len] == '\n')
+// 		len++;
+// 	line = malloc(len + 1);
+// 	len = 0;
+// 	while (temp[len] && temp[len] != '\n')
+// 	{
+// 		line[len] = temp[len];
+// 		len++;
+// 	}
+// 	if (temp[len] == '\n')
+// 		line[len++] = '\n';
+// 	line[len] = 0;
+// 	return (line);
+// }
+
+// char	*get_next_line(int fd)
+// {
+// 	char static stat[BUFFER_SIZE + 1];
+// 	char *temp;
+// 	char *line;
+	
+// 	temp = NULL;
+// 	line = NULL;
+// 	if (*stat != 0)
+// 		temp = ft_strjoin(temp, stat);
+// 	//printf("temp:%s\n", temp);
+// 	temp = reading_func(fd, temp);
+// 	if (!temp)
+// 		return (NULL);
+// 	line = ft_get_line(line, temp);
+// 	get_static(stat, temp);
+// 	free(temp);
+// 	return (line);
+// }
+
+// int main ()
+// {
+// 	int fd = open("file.txt" , O_RDONLY);
+// 	char *line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	close(fd);
+// 	fd = open("file.txt" , O_RDONLY);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// 	line = get_next_line(fd);
+// 	printf("%s", line);
+// 	free(line);
+// }
