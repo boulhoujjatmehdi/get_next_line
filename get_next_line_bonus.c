@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eboulhou <eboulhou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 11:53:04 by eboulhou          #+#    #+#             */
-/*   Updated: 2022/11/06 17:37:10 by eboulhou         ###   ########.fr       */
+/*   Updated: 2022/11/06 17:59:08 by eboulhou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include	"get_next_line.h"
+#include	"get_next_line_bonus.h"
 
 int	found_back_n(char *str)
 {
@@ -101,7 +101,7 @@ void	ft_set_stat(char *temp, char *stat)
 
 char	*get_next_line(int fd)
 {
-	char static	stat[BUFFER_SIZE];
+	char static	stat[OPEN_MAX][BUFFER_SIZE];
 	char		*temp;
 	char		*line;
 
@@ -109,16 +109,16 @@ char	*get_next_line(int fd)
 		return (NULL);
 	temp = NULL;
 	line = NULL;
-	if (stat[0])
-		temp = ft_strjoin (temp, stat);
+	if (stat[fd][0])
+		temp = ft_strjoin (temp, stat[fd]);
 	temp = read_function(fd, temp);
 	if (!temp)
 	{
 		return (NULL);
 	}
 	line = ft_get_line (temp);
-	ft_set_stat (temp, stat);
-	if (!temp[0] && !stat[0])
+	ft_set_stat (temp, stat[fd]);
+	if (!temp[0] && !stat[fd][0])
 	{
 		line = NULL;
 	}
